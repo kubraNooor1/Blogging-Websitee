@@ -7,8 +7,7 @@ on:
 
 permissions:
   contents: write
-  id-token: write
-
+  id-token: write  
 
 jobs:
   build:
@@ -20,7 +19,6 @@ jobs:
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
-       
 
       - name: Install Parcel
         run: npm install parcel
@@ -37,12 +35,9 @@ jobs:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
+    permissions:  
+      contents: write
+      id-token: write
     steps:
       - name: Deploy Pages
         uses: actions/deploy-pages@v4
-    
-      - name: Debug Environment Variables
-        run: env | sort
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-            
