@@ -1,43 +1,33 @@
-name: Deploy Development Branch
+name: WF-CD-development
 
 on:
   push:
     branches:
       - develop
 
-permissions:
-  contents: write
-  id-token: write  
-
 jobs:
-  build:
-    name: Build Website
+  build-develop-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-
-      - name: Install Parcel
-        run: npm install parcel
-
-      - name: Build Website
-        run: npx parcel build src/index.html
-
-      - name: Upload Artifact
+      - name: Build website
+        run: |
+          npx parcel build "./src/index.html" --dist-dir "./dev" --public-url "./"
+      
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: "./dev"
 
-  deploy:
-    name: Deploy to GitHub Pages
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:  
-      contents: write
+  deploy-develop-job:
+    needs: build-develop-job
+    environment: "deployment-env"
+    permissions:
+      pages: write
       id-token: write
+    runs-on: ubuntu-latest
     steps:
-      - name: Deploy Pages
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
